@@ -1,9 +1,3 @@
-"""
-Controller — административные маршруты.
-GET /admin/users, POST /admin/promote, GET /admin/logs
-Доступны только пользователям с ролью admin (Этап 5).
-"""
-
 from flask import Blueprint, g, jsonify, request
 
 from models.database import get_db, log_access
@@ -16,10 +10,6 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 @admin_bp.route('/users', methods=['GET'])
 @check_role('admin')
 def list_users():
-    """
-    Этапы 5, 6. Бонус 2 (автоочистка запускается before_request).
-    Список всех пользователей без чувствительных полей.
-    """
     db = get_db()
     rows = db.execute(
         "SELECT id, email, role, created_at, last_login FROM users ORDER BY created_at DESC"
@@ -32,10 +22,6 @@ def list_users():
 @admin_bp.route('/promote', methods=['POST'])
 @check_role('admin')
 def promote():
-    """
-    Этапы 5, 6.
-    Повышает роль указанного пользователя до admin.
-    """
     data = request.get_json(silent=True)
     if not data:
         return jsonify({'error': 'Ожидается JSON'}), 400
@@ -58,10 +44,6 @@ def promote():
 @admin_bp.route('/logs', methods=['GET'])
 @check_role('admin')
 def view_logs():
-    """
-    Этапы 5, 6.
-    Последние 100 записей из лога доступа к персональным данным.
-    """
     db = get_db()
     rows = db.execute(
         "SELECT * FROM access_log ORDER BY timestamp DESC LIMIT 100"

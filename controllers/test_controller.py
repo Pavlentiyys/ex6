@@ -1,8 +1,3 @@
-"""
-Controller — демо-эндпоинты для тестирования уязвимостей (Этап 8).
-POST /test/sql-injection, POST /test/xss
-"""
-
 import html as html_lib
 
 from flask import Blueprint, jsonify, request
@@ -15,17 +10,12 @@ test_bp = Blueprint('test', __name__, url_prefix='/test')
 
 @test_bp.route('/sql-injection', methods=['POST'])
 def sql_injection_demo():
-    """
-    Этап 8: демонстрация защиты от SQL-инъекций.
-    Параметризованный запрос делает инъекцию невозможной.
-    """
     data = request.get_json(silent=True)
     if not data:
         return jsonify({'error': 'Ожидается JSON'}), 400
 
     email = data.get('email', '')
 
-    # БЕЗОПАСНО: параметризованный запрос — строка не интерпретируется как SQL
     db = get_db()
     row = db.execute("SELECT email, role FROM users WHERE email = ?", (email,)).fetchone()
 
@@ -36,10 +26,6 @@ def sql_injection_demo():
 
 @test_bp.route('/xss', methods=['POST'])
 def xss_demo():
-    """
-    Этап 8: демонстрация защиты от XSS.
-    Показывает сырой ввод и экранированный результат.
-    """
     data = request.get_json(silent=True)
     if not data:
         return jsonify({'error': 'Ожидается JSON'}), 400

@@ -1,7 +1,3 @@
-"""
-Service — JWT-аутентификация и декораторы доступа для облачного хранилища (Этап 5).
-"""
-
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 
@@ -31,7 +27,6 @@ def _extract_token() -> str:
 
 
 def require_auth(f):
-    """Этап 5: проверяет JWT-токен."""
     @wraps(f)
     def decorated(*args, **kwargs):
         token = _extract_token()
@@ -51,7 +46,6 @@ def require_auth(f):
 
 
 def require_admin(f):
-    """Этап 9: требует роль admin."""
     @wraps(f)
     def decorated(*args, **kwargs):
         token = _extract_token()

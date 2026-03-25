@@ -1,8 +1,3 @@
-"""
-Практическая работа №7-8 — Облачное хранилище с шифрованием.
-Точка входа. Порт 5002.
-"""
-
 import os
 import sys
 
@@ -20,16 +15,16 @@ from controllers.cloud_admin_controller import cloud_admin_bp
 def create_cloud_app() -> Flask:
     app = Flask(__name__)
     app.config['SECRET_KEY'] = config.SECRET_KEY
-    app.config['MAX_CONTENT_LENGTH'] = config.MAX_FILE_SIZE  # Этап 10
+    app.config['MAX_CONTENT_LENGTH'] = config.MAX_FILE_SIZE
 
     limiter.init_app(app)
 
     app.teardown_appcontext(close_db)
     app.before_request(maybe_purge)
 
-    app.register_blueprint(cloud_auth_bp)    # /register, /login
-    app.register_blueprint(files_bp)         # /upload, /download, /files
-    app.register_blueprint(cloud_admin_bp)   # /admin/*
+    app.register_blueprint(cloud_auth_bp)
+    app.register_blueprint(files_bp)
+    app.register_blueprint(cloud_admin_bp)
 
     return app
 
@@ -41,13 +36,10 @@ if __name__ == '__main__':
     print("Практическая работа №7-8 — Облачное хранилище")
     print("=" * 60)
 
-    # Этап 3: создаём key.key и Этап 4: RSA-ключи (если не существуют)
     setup_keys()
 
-    # Создаём таблицы и тестовых пользователей
     init_db()
 
-    # Этап 6: SSL-сертификат
     root = os.path.dirname(__file__)
     cert_path = os.path.join(root, 'cert.pem')
     key_path = os.path.join(root, 'key.pem')
@@ -68,5 +60,4 @@ if __name__ == '__main__':
     print("=" * 60)
 
     app = create_cloud_app()
-    # Этап 6: HTTPS
     app.run(host='0.0.0.0', port=5002, debug=False, ssl_context=(cert_path, key_path))

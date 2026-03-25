@@ -1,9 +1,3 @@
-"""
-Controller — административные маршруты облачного хранилища.
-GET /admin/files, GET /admin/users, GET /admin/logs
-Доступны только role=admin (Этап 9).
-"""
-
 from flask import Blueprint, g, jsonify
 
 import cloud_config as config
@@ -36,7 +30,6 @@ def all_users():
 @cloud_admin_bp.route('/logs', methods=['GET'])
 @require_admin
 def view_logs():
-    """Возвращает последние 100 строк cloud_audit.log."""
     try:
         with open(config.AUDIT_LOG, 'r') as f:
             lines = [l.strip() for l in f.readlines() if l.strip()]

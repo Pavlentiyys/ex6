@@ -1,8 +1,3 @@
-"""
-Controller — аутентификация облачного сервиса.
-POST /register, POST /login
-"""
-
 import sqlite3
 
 import bcrypt
@@ -42,7 +37,6 @@ def register():
 
 @cloud_auth_bp.route('/login', methods=['POST'])
 def login():
-    """Этап 5: выдаёт JWT при успешной аутентификации."""
     data = request.get_json(silent=True)
     if not data:
         return jsonify({'error': 'Ожидается JSON'}), 400

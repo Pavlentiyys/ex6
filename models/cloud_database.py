@@ -1,9 +1,3 @@
-"""
-Model — SQLite для облачного хранилища.
-Таблицы: cloud_users, files.
-Аудит-лог (Этап 7), автоудаление файлов (Этап 10).
-"""
-
 import logging
 import os
 import sqlite3
@@ -13,7 +7,6 @@ from flask import g
 
 import cloud_config as config
 
-# Этап 7: аудит-лог
 logging.basicConfig(
     filename=config.AUDIT_LOG,
     level=logging.INFO,
@@ -35,7 +28,6 @@ def close_db(error=None):
 
 
 def init_db():
-    """Создаёт таблицы и добавляет тестовых пользователей."""
     import bcrypt
     db = sqlite3.connect(config.DATABASE)
     db.executescript("""
@@ -56,7 +48,6 @@ def init_db():
             size           INTEGER NOT NULL
         );
     """)
-    # Тестовые пользователи (создаются один раз)
     count = db.execute("SELECT COUNT(*) FROM cloud_users").fetchone()[0]
     if count == 0:
         admin_hash = bcrypt.hashpw(b'admin123', bcrypt.gensalt())
@@ -74,7 +65,6 @@ def init_db():
 
 
 def log_audit(user: str, action: str, detail: str = '') -> None:
-    """Этап 7: логирует все события безопасности в cloud_audit.log."""
     from flask import request as req
     try:
         ip = req.remote_addr or 'unknown'
@@ -86,8 +76,6 @@ def log_audit(user: str, action: str, detail: str = '') -> None:
     msg += f" | ip={ip}"
     logging.info(msg)
 
-
-# --- Этап 10: автоудаление файлов через 24 часа ---
 
 _last_purge = datetime.min.replace(tzinfo=timezone.utc)
 

@@ -1,10 +1,3 @@
-"""
-Практическая работа №6 — Защита персональных данных в сети Интернет.
-
-Точка входа. Фабрика приложения Flask.
-Регистрирует blueprints, расширения, хуки жизненного цикла.
-"""
-
 import os
 from flask import Flask
 
@@ -21,17 +14,14 @@ def create_app() -> Flask:
     app.config['SECRET_KEY'] = config.SECRET_KEY
     app.config['DATABASE'] = config.DATABASE
 
-    # Расширения
     limiter.init_app(app)
 
-    # Хуки жизненного цикла
     app.teardown_appcontext(close_db)
     app.before_request(maybe_purge)
 
-    # Blueprints (View-слой)
-    app.register_blueprint(auth_bp)   # /register, /login, /profile
-    app.register_blueprint(admin_bp)  # /admin/users, /admin/promote, /admin/logs
-    app.register_blueprint(test_bp)   # /test/sql-injection, /test/xss
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(test_bp)
 
     return app
 
@@ -57,5 +47,4 @@ if __name__ == '__main__':
     print(f"Fernet-ключ: {'из ENV' if os.environ.get('FERNET_KEY') else 'временный (новый при каждом запуске)'}")
     print("=" * 60)
 
-    # Этап 4: HTTPS с self-signed сертификатом
     app.run(host='0.0.0.0', port=5001, debug=False, ssl_context=(cert_path, key_path))

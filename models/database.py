@@ -1,8 +1,3 @@
-"""
-Model — работа с базой данных.
-Содержит: подключение, инициализацию схемы, логирование доступа, автоочистку.
-"""
-
 import sqlite3
 import logging
 from datetime import datetime, timedelta, timezone
@@ -13,7 +8,6 @@ import config
 
 
 def get_db() -> sqlite3.Connection:
-    """Возвращает соединение с БД для текущего контекста запроса."""
     if 'db' not in g:
         g.db = sqlite3.connect(config.DATABASE)
         g.db.row_factory = sqlite3.Row
@@ -21,14 +15,12 @@ def get_db() -> sqlite3.Connection:
 
 
 def close_db(error=None):
-    """Закрывает соединение с БД по завершении запроса."""
     db = g.pop('db', None)
     if db is not None:
         db.close()
 
 
 def init_db():
-    """Создаёт таблицы при первом запуске."""
     db = sqlite3.connect(config.DATABASE)
     db.executescript("""
         CREATE TABLE IF NOT EXISTS users (
@@ -54,7 +46,6 @@ def init_db():
 
 
 def log_access(user_email: str, action: str) -> None:
-    """Этап 6: логирует каждое обращение к персональным данным."""
     ip = request.remote_addr if request else 'unknown'
     logging.info(f"ACCESS | user={user_email} | action={action} | ip={ip}")
     try:
@@ -65,16 +56,13 @@ def log_access(user_email: str, action: str) -> None:
         )
         db.commit()
     except Exception:
-        pass  # логирование не должно прерывать основной поток
+        pass
 
-
-# --- Бонус 2: автоудаление устаревших данных ---
 
 _last_purge = datetime.min.replace(tzinfo=timezone.utc)
 
 
 def purge_old_accounts():
-    """Удаляет аккаунты старше DATA_RETENTION_DAYS дней."""
     cutoff = (datetime.now(timezone.utc) - timedelta(days=config.DATA_RETENTION_DAYS)).isoformat()
     db = get_db()
     result = db.execute("DELETE FROM users WHERE created_at < ?", (cutoff,))
@@ -84,7 +72,6 @@ def purge_old_accounts():
 
 
 def maybe_purge():
-    """before_request-хук: запускает очистку не чаще раза в час."""
     global _last_purge
     now = datetime.now(timezone.utc)
     if now - _last_purge > timedelta(hours=1):
