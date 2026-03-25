@@ -1,0 +1,46 @@
+"""
+Controller — административные маршруты облачного хранилища.
+GET /admin/files, GET /admin/users, GET /admin/logs
+Доступны только role=admin (Этап 9).
+"""
+
+from flask import Blueprint, g, jsonify
+
+import config
+from models.database import get_db, log_audit
+from services.auth import require_admin
+
+admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+
+@admin_bp.route('/files', methods=['GET'])
+@require_admin
+def all_files():
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, filename, owner, sha256_hash, uploaded_at, size FROM files ORDER BY uploaded_at DESC"
+    ).fetchall()
+    log_audit(g.current_user['email'], 'admin_list_all_files', f'count={len(rows)}')
+    return jsonify({'files': [dict(r) for r in rows], 'count': len(rows)}), 200
+
+
+@admin_bp.route('/users', methods=['GET'])
+@require_admin
+def all_users():
+    db = get_db()
+    rows = db.execute("SELECT id, email, role FROM cloud_users ORDER BY id").fetchall()
+    log_audit(g.current_user['email'], 'admin_list_users')
+    return jsonify({'users': [dict(r) for r in rows]}), 200
+
+
+@admin_bp.route('/logs', methods=['GET'])
+@require_admin
+def view_logs():
+    """Возвращает последние 100 строк cloud_audit.log."""
+    try:
+        with open(config.AUDIT_LOG, 'r') as f:
+            lines = [l.strip() for l in f.readlines() if l.strip()]
+        log_audit(g.current_user['email'], 'admin_view_logs')
+        return jsonify({'logs': lines[-100:]}), 200
+    except FileNotFoundError:
+        return jsonify({'logs': []}), 200

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.log
+cloud_storage/
+cloud/keys/private.pem
