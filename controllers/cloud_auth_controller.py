@@ -8,13 +8,13 @@ import sqlite3
 import bcrypt
 from flask import Blueprint, jsonify, request
 
-from models.database import get_db, log_audit
-from services.auth import generate_token
+from models.cloud_database import get_db, log_audit
+from services.cloud_auth import generate_token
 
-auth_bp = Blueprint('auth', __name__)
+cloud_auth_bp = Blueprint('cloud_auth', __name__)
 
 
-@auth_bp.route('/register', methods=['POST'])
+@cloud_auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json(silent=True)
     if not data:
@@ -40,7 +40,7 @@ def register():
     return jsonify({'status': 'registered'}), 201
 
 
-@auth_bp.route('/login', methods=['POST'])
+@cloud_auth_bp.route('/login', methods=['POST'])
 def login():
     """Этап 5: выдаёт JWT при успешной аутентификации."""
     data = request.get_json(silent=True)

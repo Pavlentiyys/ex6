@@ -1,5 +1,5 @@
 """
-Service — JWT-аутентификация и декораторы доступа (Этап 5).
+Service — JWT-аутентификация и декораторы доступа для облачного хранилища (Этап 5).
 """
 
 from datetime import datetime, timedelta, timezone
@@ -8,8 +8,8 @@ from functools import wraps
 import jwt
 from flask import g, jsonify, request
 
-import config
-from models.database import log_audit
+import cloud_config as config
+from models.cloud_database import log_audit
 
 
 def generate_token(email: str, role: str) -> str:

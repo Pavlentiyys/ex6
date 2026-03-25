@@ -6,14 +6,14 @@ GET /admin/files, GET /admin/users, GET /admin/logs
 
 from flask import Blueprint, g, jsonify
 
-import config
-from models.database import get_db, log_audit
-from services.auth import require_admin
+import cloud_config as config
+from models.cloud_database import get_db, log_audit
+from services.cloud_auth import require_admin
 
-admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+cloud_admin_bp = Blueprint('cloud_admin', __name__, url_prefix='/admin')
 
 
-@admin_bp.route('/files', methods=['GET'])
+@cloud_admin_bp.route('/files', methods=['GET'])
 @require_admin
 def all_files():
     db = get_db()
@@ -24,7 +24,7 @@ def all_files():
     return jsonify({'files': [dict(r) for r in rows], 'count': len(rows)}), 200
 
 
-@admin_bp.route('/users', methods=['GET'])
+@cloud_admin_bp.route('/users', methods=['GET'])
 @require_admin
 def all_users():
     db = get_db()
@@ -33,7 +33,7 @@ def all_users():
     return jsonify({'users': [dict(r) for r in rows]}), 200
 
 
-@admin_bp.route('/logs', methods=['GET'])
+@cloud_admin_bp.route('/logs', methods=['GET'])
 @require_admin
 def view_logs():
     """Возвращает последние 100 строк cloud_audit.log."""

@@ -4,4 +4,4 @@ __pycache__/
 *.db
 *.log
 cloud_storage/
-cloud/keys/private.pem
+keys/private.pem

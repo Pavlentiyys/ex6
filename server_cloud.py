@@ -6,21 +6,18 @@
 import os
 import sys
 
-# Добавляем cloud/ в sys.path чтобы import config / from models... работал корректно
-sys.path.insert(0, os.path.dirname(__file__))
-
 from flask import Flask
 
-import config
+import cloud_config as config
 from extensions import limiter
-from models.database import close_db, init_db, maybe_purge
+from models.cloud_database import close_db, init_db, maybe_purge
 from services.encryption import setup_keys
-from controllers.auth_controller import auth_bp
+from controllers.cloud_auth_controller import cloud_auth_bp
 from controllers.files_controller import files_bp
-from controllers.admin_controller import admin_bp
+from controllers.cloud_admin_controller import cloud_admin_bp
 
 
-def create_app() -> Flask:
+def create_cloud_app() -> Flask:
     app = Flask(__name__)
     app.config['SECRET_KEY'] = config.SECRET_KEY
     app.config['MAX_CONTENT_LENGTH'] = config.MAX_FILE_SIZE  # Этап 10
@@ -30,9 +27,9 @@ def create_app() -> Flask:
     app.teardown_appcontext(close_db)
     app.before_request(maybe_purge)
 
-    app.register_blueprint(auth_bp)    # /register, /login
-    app.register_blueprint(files_bp)   # /upload, /download, /files
-    app.register_blueprint(admin_bp)   # /admin/*
+    app.register_blueprint(cloud_auth_bp)    # /register, /login
+    app.register_blueprint(files_bp)         # /upload, /download, /files
+    app.register_blueprint(cloud_admin_bp)   # /admin/*
 
     return app
 
@@ -50,8 +47,8 @@ if __name__ == '__main__':
     # Создаём таблицы и тестовых пользователей
     init_db()
 
-    # Этап 6: SSL-сертификат (reuse из lab 6)
-    root = os.path.dirname(os.path.dirname(__file__))
+    # Этап 6: SSL-сертификат
+    root = os.path.dirname(__file__)
     cert_path = os.path.join(root, 'cert.pem')
     key_path = os.path.join(root, 'key.pem')
 
@@ -70,6 +67,6 @@ if __name__ == '__main__':
     print("    user@cloud.local  / user123   (роль: user)")
     print("=" * 60)
 
-    app = create_app()
+    app = create_cloud_app()
     # Этап 6: HTTPS
     app.run(host='0.0.0.0', port=5002, debug=False, ssl_context=(cert_path, key_path))

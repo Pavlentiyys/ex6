@@ -11,7 +11,7 @@ from datetime import datetime, timedelta, timezone
 
 from flask import g
 
-import config
+import cloud_config as config
 
 # Этап 7: аудит-лог
 logging.basicConfig(
@@ -22,14 +22,14 @@ logging.basicConfig(
 
 
 def get_db() -> sqlite3.Connection:
-    if 'db' not in g:
-        g.db = sqlite3.connect(config.DATABASE)
-        g.db.row_factory = sqlite3.Row
-    return g.db
+    if 'cloud_db' not in g:
+        g.cloud_db = sqlite3.connect(config.DATABASE)
+        g.cloud_db.row_factory = sqlite3.Row
+    return g.cloud_db
 
 
 def close_db(error=None):
-    db = g.pop('db', None)
+    db = g.pop('cloud_db', None)
     if db is not None:
         db.close()
 

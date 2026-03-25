@@ -13,10 +13,10 @@ from datetime import datetime, timezone
 
 from flask import Blueprint, g, jsonify, request, send_file
 
-import config
+import cloud_config as config
 from extensions import limiter
-from models.database import get_db, log_audit
-from services.auth import require_auth
+from models.cloud_database import get_db, log_audit
+from services.cloud_auth import require_auth
 from services.encryption import decrypt_file, encrypt_file, sha256_hash
 
 files_bp = Blueprint('files', __name__)
@@ -88,7 +88,6 @@ def download(file_id: str):
     db = get_db()
     row = db.execute("SELECT * FROM files WHERE id = ?", (file_id,)).fetchone()
 
-    # Этап 8: без JWT → 401 (handled by @require_auth)
     if row is None:
         log_audit(g.current_user['email'], 'download_not_found', f'id={file_id}')
         return jsonify({'error': 'Файл не найден'}), 404
