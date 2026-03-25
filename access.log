@@ -1,0 +1,31 @@
+2026-03-26 01:42:19,860 - ACCESS | user=user@test.com | action=register | ip=127.0.0.1
+2026-03-26 01:42:20,336 - ACCESS | user=user@test.com | action=login_success | ip=127.0.0.1
+2026-03-26 01:42:20,338 - ACCESS | user=user@test.com | action=view_profile | ip=127.0.0.1
+2026-03-26 01:42:20,339 - ACCESS | user=user@test.com | action=DENIED:admin_list_users | ip=127.0.0.1
+2026-03-26 01:42:20,340 - ACCESS | user=admin&#x27;-- | action=login_failed | ip=127.0.0.1
+2026-03-26 01:42:20,578 - ACCESS | user=admin@test.com | action=register | ip=127.0.0.1
+2026-03-26 01:42:20,829 - ACCESS | user=admin@test.com | action=login_success | ip=127.0.0.1
+2026-03-26 01:42:20,831 - ACCESS | user=admin@test.com | action=admin_list_users | ip=127.0.0.1
+2026-03-26 01:42:20,832 - ACCESS | user=admin@test.com | action=admin_view_logs | ip=127.0.0.1
+2026-03-26 01:47:59,069 - ACCESS | user=user@test.com | action=register | ip=127.0.0.1
+2026-03-26 01:47:59,546 - ACCESS | user=user@test.com | action=login_success | ip=127.0.0.1
+2026-03-26 01:47:59,548 - ACCESS | user=user@test.com | action=view_profile | ip=127.0.0.1
+2026-03-26 01:47:59,549 - ACCESS | user=user@test.com | action=DENIED:list_users | ip=127.0.0.1
+2026-03-26 01:47:59,550 - ACCESS | user=admin&#x27;-- | action=login_failed | ip=127.0.0.1
+2026-03-26 01:47:59,789 - ACCESS | user=admin@test.com | action=register | ip=127.0.0.1
+2026-03-26 01:48:29,469 - ACCESS | user=user@test.com | action=register | ip=127.0.0.1
+2026-03-26 01:48:29,943 - ACCESS | user=user@test.com | action=login_success | ip=127.0.0.1
+2026-03-26 01:48:29,945 - ACCESS | user=user@test.com | action=view_profile | ip=127.0.0.1
+2026-03-26 01:48:29,946 - ACCESS | user=user@test.com | action=DENIED:list_users | ip=127.0.0.1
+2026-03-26 01:48:29,947 - ACCESS | user=admin&#x27;-- | action=login_failed | ip=127.0.0.1
+2026-03-26 01:48:30,183 - ACCESS | user=admin@test.com | action=register | ip=127.0.0.1
+2026-03-26 01:48:30,422 - ACCESS | user=admin@test.com | action=login_success | ip=127.0.0.1
+2026-03-26 01:48:30,423 - ACCESS | user=admin@test.com | action=admin_list_users | ip=127.0.0.1
+2026-03-26 01:48:30,424 - ACCESS | user=admin@test.com | action=admin_view_logs | ip=127.0.0.1
+2026-03-26 01:53:21,661 - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5001
+ * Running on https://192.168.8.36:5001
+2026-03-26 01:53:21,661 - [33mPress CTRL+C to quit[0m
+2026-03-26 01:53:42,496 - ACCESS | user=test@test.com | action=register | ip=127.0.0.1
+2026-03-26 01:53:42,497 - 127.0.0.1 - - [26/Mar/2026 01:53:42] "[35m[1mPOST /register HTTP/1.1[0m" 201 -
