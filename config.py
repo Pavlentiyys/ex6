@@ -9,7 +9,7 @@ DATABASE = os.path.join(BASE_DIR, 'users.db')
 DATA_RETENTION_DAYS = 30
 
 _raw = os.environ.get('FERNET_KEY')
-FERNET_KEY = _raw.encode() if _raw else Fernet.generate_key()
+FERNET_KEY = _raw.encode() if _raw else b'VJ7odn0Xriw1S9_oapuj92U8FPOmQbXFQ8sD3XYhsWg='
 fernet = Fernet(FERNET_KEY)
 
 logging.basicConfig(
